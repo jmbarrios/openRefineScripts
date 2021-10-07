@@ -1,0 +1,44 @@
+[
+  {
+    "op": "core/column-addition-by-fetching-urls",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "baseColumnName": "latitude",
+    "urlExpression": "grel:\"http://api.geonames.org/countryCode?lat=\"+value+\"&lng=\"+cells['longitude'].value+\"&username=jmbarrios&type=JSON&radius=100\"",
+    "onError": "set-to-blank",
+    "newColumnName": "countryCodeValidationJSON",
+    "columnInsertIndex": 12,
+    "delay": 50,
+    "cacheResponses": true,
+    "httpHeadersJson": [
+      {
+        "name": "authorization",
+        "value": ""
+      },
+      {
+        "name": "user-agent",
+        "value": "OpenRefine 3.4.1 [437dc4d]"
+      },
+      {
+        "name": "accept",
+        "value": "*/*"
+      }
+    ],
+    "description": "Create column countryCodeValidationJSON at index 12 by fetching URLs based on column latitude using expression grel:\"http://api.geonames.org/countryCode?lat=\"+value+\"&lng=\"+cells['longitude'].value+\"&username=jmbarrios&type=JSON&radius=100\""
+  },
+  {
+    "op": "core/column-addition",
+    "engineConfig": {
+      "facets": [],
+      "mode": "row-based"
+    },
+    "baseColumnName": "countryCodeValidationJSON",
+    "expression": "grel:if(value.parseJson()[\"countryCode\"] == cells[\"countryCode\"].value, \"coordinates valid at country level\",\"probably georreference issue\")",
+    "onError": "set-to-blank",
+    "newColumnName": "countryCodeValidation",
+    "columnInsertIndex": 13,
+    "description": "Create column countryCodeValidation at index 13 based on column countryCodeValidationJSON using expression grel:if(value.parseJson()[\"countryCode\"] == cells[\"countryCode\"].value, \"coordinates valid at country level\",\"probably georreference issue\")"
+  }
+]
